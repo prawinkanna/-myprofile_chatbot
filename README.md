@@ -3,6 +3,11 @@
 An intelligent, interactive AI conversational assistant powered by **Google Gemini 3.5 Flash** and grounded in the comprehensive academic, project, and professional profile of **Prawin Kanna P** (Applied Data Science postgraduate, Data Science Trainer at FITA Academy, and aspiring AI/ML Engineer).
 
 ---
+## 🚀 Live Demo
+
+Try my AI Profile Chatbot here:
+👉 [Open My Chatbot](https://dxgbpzwxfjuwdvy7j8rg3n.streamlit.app/)
+
 
 ## 🌟 Key Features
 
