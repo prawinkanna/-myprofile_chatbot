@@ -53,27 +53,7 @@ prawin_profile_chatbot/
 
 ---
 
-## 🚀 How to Run
 
-### 1. Launch the Streamlit Web Application:
-```powershell
-cd C:\Users\Admin\.gemini\antigravity\scratch\prawin_profile_chatbot
-streamlit run app.py
-```
-The application will open in your browser at `http://localhost:8501`.
-
-### 2. Run the Terminal CLI Chatbot:
-```powershell
-cd C:\Users\Admin\.gemini\antigravity\scratch\prawin_profile_chatbot
-python cli_chat.py
-```
-
-### 3. Run Automated Tests:
-```powershell
-python test_chatbot.py
-```
-
----
 
 ## 🎓 Profile Highlights
 
