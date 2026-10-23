@@ -6,7 +6,7 @@ An intelligent, interactive AI conversational assistant powered by **Google Gemi
 ## 🚀 Live Demo
 
 Try my AI Profile Chatbot here:
-👉 [Open My Chatbot](https://dxgbpzwxfjuwdvy7j8rg3n.streamlit.app/)
+👉 [Open My Chatbot](https://kyt5xdgovsbsnaakofyxtz.streamlit.app/)
 
 
 ## 🌟 Key Features
