@@ -17,18 +17,28 @@ FALLBACK_MODELS = [
     "gemini-3.8-flash"
 ]
 
-def load_env_file(filepath: str = ".env") -> None:
-    """Zero-dependency .env loader."""
-    if os.path.exists(filepath):
-        try:
-            with open(filepath, "r", encoding="utf-8") as f:
-                for line in f:
-                    line = line.strip()
-                    if line and not line.startswith("#") and "=" in line:
-                        k, v = line.split("=", 1)
-                        os.environ.setdefault(k.strip(), v.strip().strip('"').strip("'"))
-        except Exception:
-            pass
+def load_env_file(filepath: Optional[str] = None) -> None:
+    """Zero-dependency .env loader that checks both script directory and current working directory."""
+    candidate_paths = []
+    if filepath:
+        candidate_paths.append(filepath)
+    else:
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        candidate_paths.append(os.path.join(script_dir, ".env"))
+        candidate_paths.append(os.path.abspath(".env"))
+
+    for path in candidate_paths:
+        if os.path.exists(path):
+            try:
+                with open(path, "r", encoding="utf-8") as f:
+                    for line in f:
+                        line = line.strip()
+                        if line and not line.startswith("#") and "=" in line:
+                            k, v = line.split("=", 1)
+                            os.environ.setdefault(k.strip(), v.strip().strip('"').strip("'"))
+                break
+            except Exception:
+                pass
 
 load_env_file()
 
@@ -36,6 +46,7 @@ def get_api_key(override_key: Optional[str] = None) -> str:
     """Resolve the API key in priority order: override -> env var -> default key."""
     if override_key and override_key.strip():
         return override_key.strip()
+    load_env_file()
     env_key = os.environ.get("GEMINI_API_KEY", "").strip()
     if env_key:
         return env_key
@@ -44,7 +55,7 @@ def get_api_key(override_key: Optional[str] = None) -> str:
 def build_gemini_payload(
     contents: List[Dict[str, Any]],
     system_instruction: Optional[str] = None,
-    temperature: float = 0.3,
+    temperature: float = 0.2,
     max_output_tokens: int = 1500
 ) -> Dict[str, Any]:
     """Format request body according to Google Gemini v1beta specification."""
@@ -66,7 +77,7 @@ def stream_generate_content(
     system_instruction: Optional[str] = None,
     model: str = "gemini-3.5-flash",
     api_key: Optional[str] = None,
-    temperature: float = 0.3,
+    temperature: float = 0.2,
     max_output_tokens: int = 1500,
     timeout: int = 60
 ) -> Generator[str, None, None]:
@@ -76,7 +87,7 @@ def stream_generate_content(
     """
     resolved_key = get_api_key(api_key)
     if not resolved_key:
-        yield "Error: No Gemini API Key provided. Please set GEMINI_API_KEY."
+        yield "Error: No Gemini API Key provided. Please set GEMINI_API_KEY in .env."
         return
 
     models_to_try = [model] + [m for m in FALLBACK_MODELS if m != model]
@@ -124,14 +135,14 @@ def generate_content(
     system_instruction: Optional[str] = None,
     model: str = "gemini-3.5-flash",
     api_key: Optional[str] = None,
-    temperature: float = 0.3,
+    temperature: float = 0.2,
     max_output_tokens: int = 1500,
     timeout: int = 30
 ) -> str:
     """Synchronous generation returning complete string output."""
     resolved_key = get_api_key(api_key)
     if not resolved_key:
-        return "Error: No Gemini API Key provided. Please set GEMINI_API_KEY."
+        return "Error: No Gemini API Key provided. Please set GEMINI_API_KEY in .env."
 
     models_to_try = [model] + [m for m in FALLBACK_MODELS if m != model]
     payload = build_gemini_payload(
