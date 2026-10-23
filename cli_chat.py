@@ -2,6 +2,7 @@
 cli_chat.py
 Interactive Command-Line Chatbot for Prawin Kanna P.
 Powered by Google Gemini 3.5 Flash and grounded in Prawin's verified resume.
+Includes strict guardrails against unwanted/irrelevant questions.
 """
 
 import sys
@@ -16,7 +17,7 @@ def main():
     
     api_key = get_api_key()
     if not api_key:
-        print("[!] Warning: GEMINI_API_KEY not found. Running in offline TF-IDF mode.\n")
+        print("[!] Warning: GEMINI_API_KEY not found in .env. Running in offline TF-IDF mode.\n")
     else:
         print("[OK] Connected to Google Gemini 3.5 API\n")
 
@@ -25,19 +26,15 @@ def main():
     print("Choose Chatbot Persona:")
     print("  1. Chat as Prawin (1st Person - speaks as Prawin)")
     print("  2. Recruiter Assistant (3rd Person - objective portfolio guide)")
-    print("  3. General AI Assistant (Open-domain Gemini 3.5)")
-    choice = input("Enter 1, 2, or 3 [Default 1]: ").strip()
+    choice = input("Enter 1 or 2 [Default 1]: ").strip()
     
-    persona_map = {"1": "first_person", "2": "third_person", "3": "general"}
+    persona_map = {"1": "first_person", "2": "third_person"}
     persona = persona_map.get(choice, "first_person")
     
-    persona_label = {
-        "first_person": "Prawin Kanna P (1st Person)",
-        "third_person": "Portfolio Assistant (3rd Person)",
-        "general": "General AI Assistant"
-    }[persona]
+    persona_label = "Prawin Kanna P (1st Person)" if persona == "first_person" else "Portfolio Assistant (3rd Person)"
     
-    print(f"\n[✓] Mode selected: {persona_label}")
+    print(f"\n[OK] Mode selected: {persona_label}")
+    print("Note: The chatbot strictly answers questions related to Prawin's profile.")
     print("Type your questions below. Type 'exit' or 'quit' to end the chat.\n")
     print("-" * 65)
 
@@ -45,11 +42,9 @@ def main():
     
     # Initial greeting
     if persona == "first_person":
-        print("\nPrawin: Hi there! I'm Prawin Kanna P. Ask me anything about my education (M.Sc. Distinction), ML projects, skills in Python/Streamlit, or my experience at FITA Academy!\n")
-    elif persona == "third_person":
-        print("\nAssistant: Welcome! I can answer any questions about Prawin Kanna P's academic record, machine learning projects, and teaching background.\n")
+        print("\nPrawin: Hi there! I'm Prawin Kanna P. Ask me anything about my education (M.Sc. Distinction), 8 AI/ML projects, technical skills, FITA Academy teaching, or internships at VDart & Edureka!\n")
     else:
-        print("\nAssistant: Hello! I'm your Gemini AI assistant. How can I help you today?\n")
+        print("\nAssistant: Welcome! I can answer any questions about Prawin Kanna P's academic record, 8 AI/ML projects, skills, and professional experience.\n")
 
     while True:
         try:
