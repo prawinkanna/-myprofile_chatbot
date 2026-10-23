@@ -43,9 +43,15 @@ def load_env_file(filepath: Optional[str] = None) -> None:
 load_env_file()
 
 def get_api_key(override_key: Optional[str] = None) -> str:
-    """Resolve the API key in priority order: override -> env var -> default key."""
+    """Resolve the API key in priority order: override -> Streamlit secrets -> env var -> default key."""
     if override_key and override_key.strip():
         return override_key.strip()
+    try:
+        import streamlit as st
+        if "GEMINI_API_KEY" in st.secrets and st.secrets["GEMINI_API_KEY"]:
+            return str(st.secrets["GEMINI_API_KEY"]).strip()
+    except Exception:
+        pass
     load_env_file()
     env_key = os.environ.get("GEMINI_API_KEY", "").strip()
     if env_key:
